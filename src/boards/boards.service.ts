@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import { v1 as uuid } from 'uuid';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -26,11 +26,18 @@ export class BoardsService {
     }
     //14. service
     getBoardById(id: string): Board { // 게시글 하나 반환하므로 []없이
-        return this.boards.find((board) => board.id === id) // 배열에서 id가 일치하는 게시물 찾기
+        const found = this.boards.find((board) => board.id === id) // 배열에서 id가 일치하는 게시물 찾기
+
+        if (!found) {  //22. ↓ 파이프를 이용해서 유효성 체크
+            throw new NotFoundException('CANNOT FIND BOARD WITH THE ID')
+        }
+
+        return found
     }
-    //16.
+    //16. service
     deleteBoard(id: string): void { //void: 반환값이 없으므로
-        this.boards = this.boards.filter((board) => board.id !== id);
+        const found = this.getBoardById(id); // 23. 이미 작성해둔 유효성 체크를 이용하자
+        this.boards = this.boards.filter((board) => board.id !== found.id);
     }
     //18. 
     updateBoardStatus(id: string, status: BoardStatus): Board {

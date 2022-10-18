@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardStatusValidationPipe } from './pipes/board-status-vaildation.pipe';
 
 @Controller('boards')
 export class BoardsController {
@@ -14,6 +15,7 @@ export class BoardsController {
     }
 
     @Post()   // 10. 게시물 생성에 사용할 controller
+    @UsePipes(ValidationPipe)  //21. 빌트인 파이프를 가져와서 사용
     createBoard(
         @Body() createBoardDto: CreateBoardDto  //12. controller에 DTO 적용하기 
     ): Board {
@@ -30,13 +32,12 @@ export class BoardsController {
     deleteBoard(@Param('id') id:string): void {
         this.boardsService.deleteBoard(id)
     }
-    //19.
+    //19. controller
     @Patch('/:id/status')  // path parameter뒤에 추가 경로 덧붙이기!!
     updateBoardStatus(
         @Param('id') id:string,
-        @Body('status') status: BoardStatus
-    ) {
-        return this.updateBoardStatus(id, status);
+        @Body('status', BoardStatusValidationPipe) status: BoardStatus
+    ) {                     // 25. ↑
+        return this.boardsService.updateBoardStatus(id, status);
     }
-
 }
