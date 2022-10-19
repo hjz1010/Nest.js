@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BoardStatus } from './board-status.enum';
+import { Board } from './board.entity';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-vaildation.pipe';
@@ -14,6 +15,12 @@ export class BoardsController {
     //     return this.boardsService.getAllBoards();
     // }
 
+    // 2-5.
+    @Post()
+    @UsePipes(ValidationPipe)
+    createBoard(@Body() createBoardDto: CreateBoardDto): Promise <Board> {
+        return this.boardsService.createBoard(createBoardDto)
+    }
     // @Post()   // 10. 게시물 생성에 사용할 controller
     // @UsePipes(ValidationPipe)  //21. 빌트인 파이프를 가져와서 사용
     // createBoard(
@@ -21,6 +28,12 @@ export class BoardsController {
     // ): Board {
     //     return this.boardsService.createBoard(createBoardDto)
     // }
+
+    // 2-3.
+    @Get('/:id')
+    getBoardById(@Param('id') id: string): Promise <Board> {
+        return this.boardsService.getBoardById(id);
+    }
     // //15. controller
     // @Get('/:id')  // ↓ path parameter에서 키가 id인 값을 가져와서 
     // getBoardById(@Param('id') id: string): Board {

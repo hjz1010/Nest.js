@@ -10,5 +10,5 @@ export const typeORMconfig : TypeOrmModuleOptions = {
         "password": "password1!",
         "database": "Nestjs_test",
         "entities": [Board], 
-        "synchronize": false 
+        "synchronize": true 
 }
