@@ -1,5 +1,5 @@
 import { ArgumentMetadata, BadRequestException, PipeTransform } from "@nestjs/common";
-import { BoardStatus } from "../board.model";
+import { BoardStatus } from "../board-status.enum";
 //24.  
 export class BoardStatusValidationPipe implements PipeTransform {
     readonly StatusOptions = [ //25. 접두사 readOnly 를 사용해서 읽기전용 값을 만들자
